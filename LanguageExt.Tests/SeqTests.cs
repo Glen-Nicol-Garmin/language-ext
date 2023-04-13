@@ -420,6 +420,30 @@ namespace LanguageExt.Tests
         }
 
         [Fact]
+        public void SeqConcatIndexer()
+        {
+            var seq1 = (from x in new[] { 1 }
+                        select x).ToSeq();
+
+            var seq2 = (from x in new[] { 2 }
+                        select x).ToSeq();
+
+            var seq3 = (from x in new[] { 3 }
+                        select x).ToSeq();
+
+            var combined = seq1.Concat(seq2).Concat(seq3);
+
+            // bounds checks
+            Assert.Throws<IndexOutOfRangeException>(() => combined[-1]);
+            Assert.Throws<IndexOutOfRangeException>(() => combined[3]);
+
+            // index into each separate inner sequence.
+            Assert.Equal(1, combined[0]);
+            Assert.Equal(2, combined[1]);
+            Assert.Equal(3, combined[2]);
+        }
+
+        [Fact]
         public void CheckItems()
         {
             var xs = Seq<int>();

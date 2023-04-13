@@ -17,8 +17,30 @@ namespace LanguageExt
             this.ms = ms;
         }
 
-        public A this[int index] => 
-            throw new NotSupportedException();
+        public A this[int index]
+        {
+            get
+            {
+                if(index < 0)
+                {
+                    throw new IndexOutOfRangeException("Negative index is invalid.");
+                }
+
+                var runningIndex = index;
+
+                foreach (var s in ms)
+                {
+                    if (runningIndex < s.Count)
+                    {
+                        return s[runningIndex];
+                    }
+
+                    runningIndex -= s.Count;
+                }
+
+                throw new IndexOutOfRangeException("Index was outside the bounds of the Sequence");
+            }
+        }
 
         public SeqType Type =>
             SeqType.Concat;
